@@ -1,0 +1,3 @@
+<!doctype html><html><head><title>Careers · Job board</title></head><body><div id="app"></div>
+<script>setTimeout(()=>{fetch('/jobs.json?'+Date.now()).then(r=>r.json()).then(j=>{document.getElementById('app').innerHTML='<h1>Open roles</h1><ul id="jobs">'+j.map(x=>'<li>'+x+'</li>').join('')+'</ul>';});},400);</script>
+</body></html>

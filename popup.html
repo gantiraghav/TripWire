@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tripwire</title>
+<link rel="stylesheet" href="ui.css">
+<style>
+  body { width: 360px; }
+  .wire { height: 3px; background: var(--accent); }
+  header { display: flex; align-items: center; gap: 9px; padding: 12px 14px 10px; }
+  header h1 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -.01em; flex: 1; }
+  section { padding: 10px 14px 12px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+  .k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .page { display: grid; gap: 2px; min-width: 0; }
+  .page .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .page .h { font-size: 12px; color: var(--ink-2); }
+  .btns { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+  .note { font-size: 12px; color: var(--ink-2); }
+  .err { font-size: 12px; color: var(--bad); }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  li button {
+    width: 100%; text-align: left; display: grid; grid-template-columns: auto 1fr auto; gap: 4px 9px; align-items: center;
+    border: 0; background: transparent; padding: 7px 8px; border-radius: 6px; font-weight: 400;
+  }
+  li button:hover { background: var(--surface); }
+  li .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  li .when { font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+  li .sub { grid-column: 2 / 4; font-size: 12px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  footer { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-top: 1px solid var(--line); }
+  .kbd { font: 11px var(--mono); color: var(--ink-3); }
+</style>
+</head>
+<body>
+<div class="wire"></div>
+<header>
+  <span class="mark" aria-hidden="true"></span>
+  <h1>Tripwire</h1>
+  <button id="dash" class="ghost" type="button">Dashboard →</button>
+</header>
+
+<section id="here">
+  <div class="k">This page</div>
+  <div class="page"><div class="t" id="p-title">…</div><div class="h" id="p-host"></div></div>
+  <div class="btns" id="p-btns">
+    <button id="pick" class="primary" type="button">Watch part of this page</button>
+    <button id="whole" type="button" title="Watch all text on the page">Whole page</button>
+  </div>
+  <div id="p-note" class="note" hidden></div>
+  <ul id="p-list"></ul>
+</section>
+
+<section id="recent-sec" hidden>
+  <div class="k">Recent changes</div>
+  <ul id="recent"></ul>
+</section>
+
+<footer>
+  <span class="kbd">Alt+Shift+W opens this</span>
+  <button id="checkall" class="ghost" type="button">Check all now</button>
+</footer>
+<script src="lib/ui.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

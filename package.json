@@ -1,0 +1,13 @@
+{
+  "name": "tripwire",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chrome extension: watch any part of any web page and get notified with a word-level diff when it changes.",
+  "scripts": {
+    "test": "node test/diff.test.js && node test/e2e.js",
+    "test:unit": "node test/diff.test.js",
+    "test:e2e": "node test/e2e.js",
+    "zip": "zip -r tripwire.zip manifest.json *.html *.js *.css lib icons -x 'icons/512.png'"
+  },
+  "devDependencies": { "playwright": "^1.56.0" }
+}

@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Tripwire",
+  "version": "1.0.0",
+  "description": "Watch any part of any web page and get notified the moment it changes, with a word-level diff of what changed.",
+  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tripwire",
+    "default_icon": { "16": "icons/16.png", "32": "icons/32.png" }
+  },
+  "background": { "service_worker": "background.js" },
+  "options_page": "dashboard.html",
+  "permissions": ["storage", "unlimitedStorage", "alarms", "notifications", "scripting", "activeTab", "offscreen", "tabs"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
+  "commands": {
+    "_execute_action": { "suggested_key": { "default": "Alt+Shift+W" } }
+  }
+}

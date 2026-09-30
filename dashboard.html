@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tripwire</title>
+<link rel="icon" href="icons/32.png">
+<link rel="stylesheet" href="ui.css">
+<style>
+  body { min-height: 100vh; }
+  .wire { height: 3px; background: var(--accent); }
+  .top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--surface); }
+  .top h1 { margin: 0; font-size: 18px; font-weight: 750; letter-spacing: -.02em; }
+  .top .stats { color: var(--ink-2); font-size: 12.5px; flex: 1; }
+  .top input[type=search] { width: 220px; }
+  .layout { display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 60px); }
+  @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } aside { border-right: 0; border-bottom: 1px solid var(--line); } }
+
+  aside { border-right: 1px solid var(--line); padding: 10px; display: grid; align-content: start; gap: 2px; }
+  .item {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 2px 10px; align-items: center; text-align: left;
+    width: 100%; padding: 10px 10px; border: 1px solid transparent; border-radius: 8px; background: transparent; font-weight: 400;
+  }
+  .item:hover { background: var(--surface); border-color: var(--line); }
+  .item[aria-current="true"] { background: var(--surface); border-color: var(--ink-3); }
+  .item .name { font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item .sub { grid-column: 2 / 4; font-size: 12px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item .when { font-size: 11px; color: var(--ink-3); white-space: nowrap; display: flex; gap: 6px; align-items: center; }
+
+  main { padding: 22px 28px 60px; min-width: 0; display: grid; align-content: start; gap: 20px; max-width: 980px; }
+  .d-head { display: grid; gap: 6px; }
+  .d-head input.title { font-size: 22px; font-weight: 750; letter-spacing: -.02em; border: 1px solid transparent; background: transparent; padding: 2px 6px; margin-left: -7px; width: 100%; }
+  .d-head input.title:hover { border-color: var(--line); }
+  .d-head .url { font-size: 12.5px; color: var(--ink-2); overflow-wrap: anywhere; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .chip { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--ink-2); }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .alert { border: 1px solid var(--line); border-left: 3px solid var(--warn); background: var(--surface); padding: 10px 12px; border-radius: 6px; font-size: 12.5px; }
+  .alert.bad { border-left-color: var(--bad); }
+
+  .settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .settings label { display: grid; gap: 5px; align-content: start; font-size: 11.5px; font-weight: 650; color: var(--ink-2); }
+  .settings .hint { font-weight: 400; color: var(--ink-3); font-size: 11px; }
+  .saved { font-size: 11.5px; color: var(--ok); align-self: end; }
+
+  h2 { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .timeline { display: grid; gap: 12px; }
+  .entry { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .entry-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .entry-head .headline { font-weight: 600; flex: 1; min-width: 200px; }
+  .entry-head .counts { font: 12px var(--mono); }
+  .entry-head .counts .a { color: var(--ins); } .entry-head .counts .r { color: var(--del); }
+  .entry-head time { font-size: 12px; color: var(--ink-3); }
+  .entry .diff { padding: 12px 14px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.6; max-height: 340px; overflow: auto; }
+  .entry.quiet .entry-head { background: var(--surface-2); }
+  .tag { font-size: 11px; color: var(--ink-2); border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; }
+  details.snap { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  details.snap summary { cursor: pointer; padding: 10px 14px; font-weight: 600; }
+  details.snap pre { margin: 0; padding: 0 14px 14px; white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.55 var(--mono); color: var(--ink-2); max-height: 360px; overflow: auto; }
+  .empty { padding: 40px 28px; display: grid; gap: 14px; max-width: 560px; }
+  .empty h2 { font-size: 22px; letter-spacing: -.02em; text-transform: none; color: var(--ink); }
+  .empty ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; color: var(--ink-2); }
+  .empty ol b { color: var(--ink); }
+  .uses { display: flex; flex-wrap: wrap; gap: 6px; }
+  .confirm { display: inline-flex; gap: 6px; align-items: center; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="wire"></div>
+<div class="top">
+  <span class="mark" aria-hidden="true"></span>
+  <h1>Tripwire</h1>
+  <span class="stats" id="stats"></span>
+  <input type="search" id="q" placeholder="Filter watches" aria-label="Filter watches">
+  <button id="checkall" type="button">Check all now</button>
+</div>
+<div class="layout" id="layout">
+  <aside id="list" aria-label="Watches"></aside>
+  <main id="detail"></main>
+</div>
+<script src="lib/ui.js"></script>
+<script src="lib/render-diff.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
